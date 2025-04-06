@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Update Email and Password{% endblock %}
+{% block content %}
+    <h1 class="center-heading">Update Your Email and Password</h1>
+
+    {% if error %}
+        <div class="error-message">{{ error }}</div>
+    {% endif %}
+
+    <div class="form-container">
+        {% if not verification_sent %}
+            <!-- Step 1: Enter New Email and New Password -->
+            <form method="POST">
+                <label>New Email</label>
+                <input type="email" name="new_email" placeholder="Enter your new email" required>
+
+                <label>New Password</label>
+                <input type="password" name="new_password" placeholder="Enter your new password" required>
+
+                <button type="submit" class="submit-btn">Send Verification Code</button>
+            </form>
+        {% else %}
+            <!-- Step 2: Enter Verification Code -->
+            <form method="POST">
+                <label>Verification Code</label>
+                <input type="text" name="verification_code" placeholder="Enter the code sent to your new email" required>
+
+                <button type="submit" class="submit-btn">Update Email and Password</button>
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}

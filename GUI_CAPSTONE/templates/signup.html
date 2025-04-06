@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Sign Up{% endblock %}
+{% block content %}
+    <h1 class="center-heading">Create Your Account</h1>
+
+    {% if error %}
+        <div class="error-message">{{ error }}</div>
+    {% endif %}
+
+    <div class="form-container">
+        <!-- Initial Signup Form -->
+        <form id="signup-form" method="POST" style="display: block;">
+            <label>Username</label>
+            <input type="text" name="username" placeholder="Enter your username" required>
+
+            <label>Email</label>
+            <input type="email" name="email" placeholder="Enter your email" required>
+
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Enter your password" required>
+
+            <button type="submit" class="submit-btn">Sign Up</button>
+        </form>
+
+        <!-- Verification Form (hidden by default) -->
+        <form id="verification-form" method="POST" style="display: none;">
+            <label>Verification Code</label>
+            <input type="text" name="verification_code" placeholder="Enter verification code" required>
+            <input type="hidden" name="email" value="{{ request.form.email }}">
+
+            <button type="submit" class="submit-btn">Verify</button>
+        </form>
+    </div>
+
+    <p class="text-center">Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+
+    <script>
+        // Show verification form after initial signup form is submitted
+        if ({{ show_verification_form|default(false) }}) {
+            document.getElementById('signup-form').style.display = 'none';
+            document.getElementById('verification-form').style.display = 'block';
+        }
+    </script>
+{% endblock %}

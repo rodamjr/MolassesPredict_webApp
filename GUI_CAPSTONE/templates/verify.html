@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Verify Your Email{% endblock %}
+{% block content %}
+    <h1 class="center-heading">Verify Your Email</h1>
+
+    {% if error %}
+        <div class="error-message">{{ error }}</div>
+    {% endif %}
+
+    <div class="form-container">
+        <form method="POST">
+            <label>Verification Code</label>
+            <input type="text" name="verification_code" placeholder="Enter the code sent to your email" required>
+            <input type="hidden" name="email" value="{{ email }}">
+
+            <button type="submit" class="submit-btn">Verify</button>
+        </form>
+    </div>
+
+    <p class="text-center">Didn't receive the code? <a href="{{ url_for('signup') }}">Resend</a></p>
+{% endblock %}

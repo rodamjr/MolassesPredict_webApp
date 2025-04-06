@@ -1,0 +1,263 @@
+{% extends 'base.html' %}
+{% block title %}Container {{ container_id }}{% endblock %}
+{% block content %}
+    <h1>Container {{ container_id }}</h1>
+    <div>
+        <label for="fermentation-type">Select Fermentation Type:</label>
+        <select id="fermentation-type">
+            <option value="FPJ">Fermented Plant Juice (FPJ)</option>
+            <option value="FFJ">Fermented Fruit Juice (FFJ)</option>
+        </select>
+    </div>
+
+    <div class="info-cards">
+        <div class="card">
+            <h3>Plant Resource Amount</h3>
+            <button onclick="toggleInput('plant-resource')">Input Amount</button>
+            <input type="number" id="plant-resource" class="hidden" placeholder="Enter amount in g" oninput="validateInput('plant-resource')" min="500" max="650">
+            <p id="plant-resource-value" class="value-display"></p>
+            <!-- Warning message -->
+            <p id="plant-resource-warning" class="warning-message hidden">Input must be between 500 and 650!</p>
+        </div>
+        <div class="card">
+            <h3>Molasses Amount</h3>
+            <button onclick="toggleInput('molasses-amount')">Input Amount</button>
+            <input type="number" id="molasses-amount" class="hidden" placeholder="Enter amount in mL" oninput="validateInput('molasses-amount')" max="1350">
+            <p id="molasses-amount-value" class="value-display"></p>
+            <!-- Warning message -->
+            <p id="molasses-amount-warning" class="warning-message hidden">Molasses amount cannot exceed the limit!</p>
+        </div>
+        <div class="card">
+            <h3>Recommended Molasses Amount</h3>
+            <p id="recommended-molasses">-- mL</p>
+        </div>
+    </div>
+
+    <div class="info-cards">
+        <div class="card">
+            <h3>Humidity</h3>
+            <p id="humidity">Loading...</p>
+        </div>
+        <div class="card">
+            <h3>Temperature</h3>
+            <p id="temperature">Loading...</p>
+        </div>
+    </div>
+
+    <div class="day-info">
+        <p id="start-date">Start Date: --</p>
+        <p id="min-extraction-date">Minimum Extraction Date: --</p>
+    </div>
+
+    <button class="begin-fermentation-button" id="begin-btn" onclick="beginFermentation()" disabled>BEGIN FERMENTATION</button>
+    <button class="hidden" id="end-btn" onclick="endFermentation()">END FERMENTATION</button>
+
+    <script>
+        function toggleInput(id) {
+            const input = document.getElementById(id);
+            input.classList.toggle('hidden');
+        }
+
+        function validateInput(id) {
+            const input = document.getElementById(id);
+            const warning = document.getElementById(`${id}-warning`);
+            const valueDisplay = document.getElementById(`${id}-value`);
+
+            const value = parseFloat(input.value);
+            valueDisplay.textContent = value ? `${value} ${id === 'molasses-amount' ? 'mL' : 'g'}` : '';
+
+            if (id === 'plant-resource') {
+                // Validate plant resource input (500g to 650g)
+                if (value < 500 || value > 650) {
+                    warning.style.display = 'block';
+                } else {
+                    warning.style.display = 'none';
+                }
+
+                // Update molasses input limit dynamically
+                const molassesInput = document.getElementById('molasses-amount');
+                const molassesLimit = 1350 - value;
+                molassesInput.max = molassesLimit;
+
+                // Update molasses warning message
+                const molassesWarning = document.getElementById('molasses-amount-warning');
+                molassesWarning.textContent = `Molasses amount cannot exceed ${molassesLimit} mL!`;
+            }
+
+            if (id === 'molasses-amount') {
+                const plantResource = parseFloat(document.getElementById('plant-resource').value) || 0;
+                const molassesLimit = 1350 - plantResource;
+
+                if (value > molassesLimit) {
+                    warning.style.display = 'block';
+                } else {
+                    warning.style.display = 'none';
+                }
+            }
+
+            checkInputs();
+        }
+
+        function checkInputs() {
+            const plantResource = parseFloat(document.getElementById("plant-resource").value) || 0;
+            const molassesAmount = parseFloat(document.getElementById("molasses-amount").value) || 0;
+
+            const plantResourceValid = plantResource >= 500 && plantResource <= 650;
+            const molassesValid = molassesAmount <= (1350 - plantResource);
+
+            document.getElementById("begin-btn").disabled = !(plantResourceValid && molassesValid);
+        }
+
+        async function fetchContainerData() {
+            try {
+                const response = await fetch('/api/container/{{ container_id }}');
+                const data = await response.json();
+                document.getElementById('humidity').innerText = data.Humidity !== 'N/A' ? `${data.Humidity}%` : "No Data";
+                document.getElementById('temperature').innerText = data.Temperature !== 'N/A' ? `${data.Temperature}°C` : "No Data";
+                if (data.start_date !== 'N/A') document.getElementById('start-date').innerText = `Start Date: ${data.start_date}`;
+                if (data.min_extraction_date !== 'N/A') document.getElementById('min-extraction-date').innerText = `Minimum Extraction Date: ${data.min_extraction_date}`;
+                document.getElementById('plant-resource').value = data.plant_resource !== 'N/A' ? data.plant_resource : '';
+                document.getElementById('molasses-amount').value = data.molasses_amount !== 'N/A' ? data.molasses_amount : '';
+            } catch (error) {
+                console.error("Error fetching container data:", error);
+            }
+        }
+
+        async function fetchSensorData() {
+            try {
+                const response = await fetch(`/api/container/{{ container_id }}`);
+                const data = await response.json();
+                document.getElementById('humidity').innerText = data.Humidity !== 'N/A' ? `${data.Humidity}%` : "No Data";
+                document.getElementById('temperature').innerText = data.Temperature !== 'N/A' ? `${data.Temperature}°C` : "No Data";
+                if (data.start_date !== 'N/A') document.getElementById('start-date').innerText = `Start Date: ${data.start_date}`;
+                if (data.min_extraction_date !== 'N/A') document.getElementById('min-extraction-date').innerText = `Minimum Extraction Date: ${data.min_extraction_date}`;
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                document.getElementById('humidity').innerText = "Error";
+                document.getElementById('temperature').innerText = "Error";
+            }
+        }
+
+        async function fetchFermentationState() {
+            try {
+                const response = await fetch(`/api/container/{{ container_id }}/state`);
+                const data = await response.json();
+                if (data.fermentation_in_progress) {
+                    document.getElementById("begin-btn").classList.add("hidden");
+                    document.getElementById("end-btn").classList.remove("hidden");
+                    document.getElementById('start-date').innerText = `Start Date: ${data.start_date}`;
+                    document.getElementById('min-extraction-date').innerText = `Minimum Extraction Date: ${data.min_extraction_date}`;
+                } else {
+                    document.getElementById("begin-btn").classList.remove("hidden");
+                    document.getElementById("end-btn").classList.add("hidden");
+                }
+            } catch (error) {
+                console.error("Error fetching fermentation state:", error);
+            }
+        }
+
+        async function beginFermentation() {
+            try {
+                const plantResource = document.getElementById("plant-resource").value;
+                const molassesAmount = document.getElementById("molasses-amount").value;
+                const fermentationType = document.getElementById('fermentation-type').value;
+                const response = await fetch(`/api/container/{{ container_id }}/begin`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ plant_resource: plantResource, molasses_amount: molassesAmount, fermentation_type: fermentationType })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('start-date').innerText = `Start Date: ${data.start_date}`;
+                    document.getElementById('min-extraction-date').innerText = `Minimum Extraction Date: ${data.min_extraction_date}`;
+                    document.getElementById("begin-btn").classList.add("hidden");
+                    document.getElementById("end-btn").classList.remove("hidden");
+                } else {
+                    alert("Error: " + data.error);
+                }
+            } catch (error) {
+                console.error("Error starting fermentation:", error);
+            }
+        }
+
+        async function endFermentation() {
+            try {
+                const fermentationType = document.getElementById('fermentation-type')?.value;
+                if (!fermentationType) {
+                    alert("Please select a fermentation type.");
+                    return;
+                }
+                let juiceExtracted = prompt("Enter the amount of juice extracted (in liters):");
+                if (juiceExtracted === null || juiceExtracted.trim() === "" || isNaN(juiceExtracted) || parseFloat(juiceExtracted) < 0) {
+                    alert("Invalid input. Please enter a valid number.");
+                    return;
+                }
+                juiceExtracted = parseFloat(juiceExtracted);
+                const response = await fetch(`/api/container/{{ container_id }}/end`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fermentation_type: fermentationType, juice_extracted: juiceExtracted })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert(`Fermentation Ended!\nJuice Extracted: ${juiceExtracted} liters`);
+                    document.getElementById("begin-btn")?.classList.remove("hidden");
+                    document.getElementById("end-btn")?.classList.add("hidden");
+                } else {
+                    alert("Error: " + (data.error || "Unknown error"));
+                }
+            } catch (error) {
+                console.error("Error ending fermentation:", error);
+                alert("An unexpected error occurred. Please try again.");
+            }
+        }
+
+        async function predictMolasses(plantResource) {
+            try {
+                const response = await fetch('/predict_sugar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ greens: plantResource })
+                });
+                const data = await response.json();
+                const molassesLimit = 1350 - plantResource;
+                const recommendedMolasses = Math.min(data.sugar_opt, molassesLimit);
+                document.getElementById('recommended-molasses').innerText = `${recommendedMolasses.toFixed(2)} mL`;
+            } catch (error) {
+                console.error("Error predicting molasses:", error);
+                alert("An error occurred while predicting the molasses amount.");
+            }
+        }
+
+        function handlePlantResourceInput() {
+            const plantResource = document.getElementById('plant-resource').value.trim();
+            if (plantResource) {
+                const plantResourceValue = parseFloat(plantResource);
+                const molassesLimit = 1350 - plantResourceValue;
+
+                // Update molasses input limit
+                document.getElementById('molasses-amount').max = molassesLimit;
+
+                // Predict molasses amount (if needed)
+                predictMolasses(plantResourceValue);
+            } else {
+                document.getElementById('recommended-molasses').innerText = '-- mL';
+            }
+        }
+
+        document.getElementById('plant-resource').addEventListener('input', function() {
+            validateInput('plant-resource');
+            handlePlantResourceInput();
+        });
+
+        document.getElementById('molasses-amount').addEventListener('input', function() {
+            validateInput('molasses-amount');
+            checkInputs();
+        });
+
+        fetchContainerData();
+        fetchFermentationState();
+        fetchSensorData();
+        setInterval(fetchSensorData, 5000);
+    </script>
+{% endblock %}

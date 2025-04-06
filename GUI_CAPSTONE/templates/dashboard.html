@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+    <h1>My Dashboard</h1>
+    <div class="dashboard-container">
+        {% for i in range(1, 4) %}
+            <a href="/container/{{ i }}" class="card" id="container-{{ i }}">
+                <h3>Container {{ i }}</h3>
+                <p class="container-status">Loading...</p>
+            </a>
+        {% endfor %}
+    </div>
+    <div class="dashboard-container">
+        <div class="card">
+            <h3>Carbon Dioxide</h3>
+            <p id="carbon-dioxide">Loading...</p>
+        </div>
+        <div class="card">
+            <h3>Air Pressure</h3>
+            <p id="air-pressure">Loading...</p>
+        </div>
+            <a href="{{ url_for('previous_trials') }}" class="card calendar">
+                <h3>Previous Trials</h3>
+                <div class="calendar-icon">📅</div>
+            </a>
+    </div>
+    <script>
+        async function fetchContainerStatus() {
+            for (let i = 1; i <= 3; i++) {
+                try {
+                    const response = await fetch(`/api/container/${i}/state`);
+                    const data = await response.json();
+
+                    const statusElement = document.querySelector(`#container-${i} .container-status`);
+                    if (data.fermentation_in_progress) {
+                        statusElement.innerText = `Fermenting (${data.fermentation_type})`;
+                        statusElement.style.color = "green";
+                    } else {
+                        statusElement.innerText = "Empty";
+                        statusElement.style.color = "gray";
+                    }
+                } catch (error) {
+                    console.error(`Error fetching status for container ${i}:`, error);
+                }
+            }
+        }
+
+
+        function fetchSensorData() {
+            fetch('/api/carbon-co2-airpressure')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('carbon-dioxide').innerText = data.CarbonDioxide !== 'N/A' ? `${data.CarbonDioxide} ppm` : "No Data";
+                    document.getElementById('air-pressure').innerText = data.AirPressure !== 'N/A' ? `${data.AirPressure} PSI` : "No Data";
+                })
+                .catch(error => console.error("Error fetching sensor data:", error));
+        }
+        fetchContainerStatus();
+        fetchSensorData();
+        setInterval(fetchContainerStatus, 5000);
+        setInterval(fetchSensorData, 5000);
+    </script>
+{% endblock %}

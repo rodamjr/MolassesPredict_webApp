@@ -1,0 +1,511 @@
+/* General Styles */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: 100vh;
+    background-color: #f1f1f1;
+}
+
+.sidebar {
+    background-color: #60c3ad;
+    color: white;
+    width: 200px;
+    padding: 50px;
+    height: 92.59vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* This ensures space between the content and the logout button */
+}
+
+.sidebar h2 {
+    margin: 0;
+    margin-bottom: 20px;
+}
+
+.sidebar nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar nav ul li {
+    margin: 10px 0;
+}
+
+.sidebar nav ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+/* Logout Button Styles */
+.logout-container {
+    margin-top: auto; /* This pushes the logout button to the bottom of the sidebar */
+}
+
+.logout-btn {
+    background-color: #f44336; /* Red color for logout */
+    color: white;
+    padding: 12px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    text-decoration: none;
+    font-weight: bold;
+    display: block; /* Ensures the button is block-level */
+    text-align: center;
+}
+
+.logout-btn:hover {
+    background-color: #d32f2f; /* Darker red on hover */
+}
+
+.content {
+    flex-grow: 1;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 24px;
+}
+
+/* SIGN IN PAGE*/
+.form-container {
+    max-width: 400px;
+    width: 100%;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 0 auto; /* Center the form horizontally */
+}
+
+/* Form Group */
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #555;
+}
+
+input[type="text"], input[type="email"], input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333;
+    margin-top: 5px;
+}
+
+/* Signup Button */
+button.submit-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #60c3ad;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+button.submit-btn:hover {
+    background-color: #4cae93; /* Darker green on hover */
+}
+
+/* Text Center */
+p.text-center {
+    text-align: center;
+    font-size: 14px;
+}
+
+p.text-center a {
+    color: #60c3ad;
+    text-decoration: none;
+}
+
+p.text-center a:hover {
+    text-decoration: underline;
+}
+
+/* Center Heading Styles */
+.center-heading {
+    text-align: center;
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 20px;
+}
+/* Dashboard Container */
+.dashboard-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Smaller minimum width for cards */
+    gap: 15px;
+    padding: 20px;
+    max-width: 1000px; /* Reduced max-width to make the overall layout narrower */
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* Error Message Styling */
+.error-message {
+    background-color: #f44336; /* Red color for error */
+    color: white;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 16px;
+}
+
+.card {
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    text-align: center;
+    width: 150px;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.card h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.card p, .gauge-placeholder, .calendar-icon {
+    margin: 0.5rem 0 0;
+    font-size: 1.2rem;
+    color: #666;
+}
+
+/* Styles for empty containers */
+.card.empty {
+    background-color: #f4f4f4;
+    border: 2px dashed #ccc;
+}
+
+.card.empty:hover {
+    border: 2px dashed #999;
+}
+
+/* Placeholder for gauges */
+.gauge-placeholder {
+    width: 60px;
+    height: 60px;
+    background-color: #e0e0e0;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Calendar card */
+.card.calendar {
+    background-color: #fff;
+    border: 2px solid #ddd;
+}
+
+.card.calendar:hover {
+    border-color: #bbb;
+}
+
+.calendar-icon {
+    font-size: 2rem;
+    color: #333;
+}
+
+/* Align info-cards horizontally */
+.info-cards {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 2rem; /* Space between cards */
+    margin-top: 1rem;
+}
+
+.info-cards .card {
+    width: auto; /* Adjust dynamically */
+    padding: 1rem;
+    text-align: center;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    flex: 1; /* Make all cards equal in width */
+}
+
+/* Optional: Add responsiveness for smaller screens */
+@media (max-width: 768px) {
+    .info-cards {
+        flex-direction: column; /* Stack cards vertically on small screens */
+        gap: 1rem;
+    }
+}
+/* General page title style */
+.page-title {
+    font-size: 2.5em;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Container for the trials table */
+.trials-container {
+    width: 80%;
+    margin: 0 auto;
+    overflow-x: auto;
+}
+
+/* Styling for the trials table */
+.trials-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Header of the table */
+.trials-table th,
+.trials-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Styling the table header */
+.trials-table th {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+/* Alternating row colors */
+.trials-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Hover effect for table rows */
+.trials-table tr:hover {
+    background-color: #e6f7ff;
+}
+
+/* Text color for data rows */
+.trials-table td {
+    color: #333;
+    font-size: 1em;
+}
+
+/* End date column color */
+.trials-table td:last-child {
+    color: #ff4500;
+}
+
+/* Bold container names */
+.trials-table td:first-child {
+    font-weight: bold;
+}
+/* Styling the table header important */
+.trials-table th {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+/* Make page title sticky at the top */
+.sticky {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 50; /* Ensure it's above the table */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: adds shadow to title */
+}
+
+/* Make the container holding the table scrollable */
+.trials-container {
+    max-height: 500px; /* You can adjust this based on your design */
+    overflow-y: auto;
+    padding-top: 20px; /* Adjusts spacing after sticky title */
+}
+/* Media queries for responsiveness on smaller screens */
+@media (max-width: 768px) {
+    .trials-table {
+        font-size: 0.9em;
+    }
+
+    .trials-table th,
+    .trials-table td {
+        padding: 10px;
+    }
+
+    .trials-table {
+        width: 100%;
+    }
+}
+.hidden { display: none; }
+input[type="number"] {
+            width: 100%; padding: 10px; margin-top: 10px; border-radius: 4px; border: 1px solid #ddd;
+        }
+        button {
+            background-color: #60c3ad; color: white; border: none; padding: 10px; border-radius: 4px;
+            cursor: pointer; font-size: 14px;
+        }
+        button:hover { background-color: #4cae93; }
+        /* Disabled button style */
+        #begin-btn:disabled {
+            background-color: #cccccc; /* Light gray */
+            cursor: not-allowed;
+        }
+        /* Red color for END button */
+        #end-btn {
+            background-color: #f44336;
+        }
+        #end-btn:hover {
+            background-color: #d32f2f;
+        }
+        .value-display {
+            margin-top: 5px;
+            font-size: 14px;
+            color: #333;
+        }
+                /* Add styles for the notification badge */
+        .notification-badge {
+            background-color: #ff6f61; /* Red background for the badge */
+            color: white; /* White text */
+            border-radius: 50%; /* Circular badge */
+            padding: 2px 6px; /* Padding for the badge */
+            font-size: 0.8rem; /* Smaller font size */
+            margin-left: 5px; /* Space between the link text and the badge */
+            vertical-align: middle; /* Align with the text */
+        }
+         /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+        }
+
+        .alert-heading {
+            text-align: center;
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .container-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .container-btn {
+            padding: 20px 50px;
+            background-color: #6b73ff;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .container-btn:hover {
+            background-color: #4a50d1;
+        }
+
+        .alert-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .alert-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid transparent;
+            margin-bottom: 10px;
+        }
+
+        .alert-title {
+            color: #333;
+            font-size: 1.25rem;
+            margin-bottom: 8px;
+        }
+
+        .alert-description {
+            color: #666;
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+
+        .no-alerts, .no-alerts-in-container {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #666;
+            margin-top: 20px;
+        }
+
+        /* Specific Alert Types */
+        .alert-humidity {
+            border-left-color: #ff6f61; /* Red for humidity alerts */
+        }
+
+        .alert-temperature {
+            border-left-color: #6b73ff; /* Blue for temperature alerts */
+        }
+
+                /* Notification badge styling */
+        .notification-badge {
+            display: inline-block;
+            background-color: #ff6f61; /* Red background for the badge */
+            color: white; /* White text */
+            border-radius: 50%; /* Make it a circle */
+            width: 20px; /* Fixed width */
+            height: 20px; /* Fixed height */
+            text-align: center; /* Center the text */
+            line-height: 20px; /* Vertically center the text */
+            font-size: 0.8rem; /* Smaller font size */
+            margin-left: 5px; /* Space between the link text and the badge */
+        }
+.hidden {
+        display: none;
+    }
+
+    .warning-message {
+        color: red;
+        font-weight: bold;
+        margin-top: 5px; /* Add some space above the warning */
+        display: none; /* Hidden by default */
+    }
+
+    .value-display {
+        margin-top: 5px;
+        font-size: 1.2em;
+    }
+
+    .card {
+        position: relative; /* Ensure the card is the positioning context */
+        margin-bottom: 10px; /* Add space between cards */
+    }
